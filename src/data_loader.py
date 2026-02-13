@@ -68,11 +68,11 @@ def load_and_preprocess_data(data_path='data/fred_qd.csv', target_variable='DPCC
     print(f"\nLoading data from {data_path}...")
     
     # Read the FRED data
-    # First row is often transformation codes, second row is headers
+    # First row is often transformation codes in real FRED data
     df = pd.read_csv(data_path)
     
-    # Skip the first row (transformation codes) if present
-    if df.iloc[0].str.contains('Transform').any() or df.columns[0] == 'sasdate':
+    # Skip the first row (transformation codes) only if it contains 'Transform' text
+    if 'Transform' in str(df.iloc[0].values):
         df = pd.read_csv(data_path, skiprows=1)
     
     # Set date as index
@@ -107,7 +107,7 @@ def load_and_preprocess_data(data_path='data/fred_qd.csv', target_variable='DPCC
     
     # Handle missing values in features
     # Forward fill then backward fill
-    X = X.fillna(method='ffill').fillna(method='bfill')
+    X = X.ffill().bfill()
     
     # If still any NaN values, drop those features
     X = X.dropna(axis=1)
