@@ -158,7 +158,7 @@ class InflationForecaster:
             'rmse': np.sqrt(mean_squared_error(y_test, y_pred)),
             'mae': mean_absolute_error(y_test, y_pred),
             'r2': r2_score(y_test, y_pred),
-            'mape': np.mean(np.abs((y_test - y_pred) / y_test)) * 100
+            'mape': np.mean(np.abs((y_test - y_pred) / (y_test + 1e-10))) * 100  # Add epsilon to avoid division by zero
         }
         
         return metrics, y_pred

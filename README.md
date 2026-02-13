@@ -48,11 +48,26 @@ python main.py
 ```
 
 This will:
-1. Download the latest FRED economic data
+1. Download the latest FRED economic data (or use sample data if offline)
 2. Preprocess the data
 3. Train and evaluate all models (ElasticNet, Ridge, Lasso, Random Forest, Gradient Boosting)
 4. Generate visualizations
 5. Save results to the `results/` directory
+
+### Interactive Analysis with Jupyter
+
+For interactive exploration and analysis:
+
+```bash
+jupyter notebook notebooks/inflation_forecasting.ipynb
+```
+
+The notebook includes:
+- Step-by-step data loading and preprocessing
+- Exploratory data analysis with visualizations
+- ElasticNet model training and evaluation
+- Model comparison across all algorithms
+- Feature importance analysis
 
 ### Using Individual Modules
 
@@ -120,6 +135,7 @@ Macro-Econ-ML/
 │   ├── model_comparison.png
 │   └── feature_importance_*.png
 ├── notebooks/                 # Jupyter notebooks (if any)
+│   └── inflation_forecasting.ipynb  # Interactive analysis notebook
 ├── main.py                    # Main entry point
 ├── requirements.txt           # Python dependencies
 └── README.md                  # This file
@@ -163,6 +179,16 @@ The results will be saved to the `results/` directory including:
 - matplotlib >= 3.7.0
 - seaborn >= 0.12.0
 - requests >= 2.31.0
+
+## Note on Data Availability
+
+If you're unable to download data from FRED (e.g., in a restricted network environment), you can generate synthetic sample data:
+
+```bash
+python src/generate_sample_data.py
+```
+
+This will create realistic economic time series data in the `data/` directory for testing purposes.
 
 ## Contributing
 
