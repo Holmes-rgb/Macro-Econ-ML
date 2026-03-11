@@ -39,9 +39,9 @@ class InflationForecaster:
         if self.model_type == 'elasticnet':
             return ElasticNet(random_state=self.random_state, max_iter=10000)
         elif self.model_type == 'ridge':
-            return Ridge(random_state=self.random_state, max_iter=10000)
+            return Ridge(max_iter=10000)
         elif self.model_type == 'lasso':
-            return Lasso(random_state=self.random_state, max_iter=10000)
+            return Lasso(max_iter=10000)
         elif self.model_type == 'random_forest':
             return RandomForestRegressor(random_state=self.random_state, n_jobs=-1)
         elif self.model_type == 'gradient_boosting':
@@ -256,10 +256,12 @@ def compare_models(X, y, test_size=0.2, random_state=42):
 
 
 if __name__ == "__main__":
-    from data_loader import load_and_preprocess_data
-    
-    # Load data
-    X, y, features = load_and_preprocess_data()
+    from data_loader import get_latest_vintage, build_dataset
+    import sys
+
+    data_dir = sys.argv[1] if len(sys.argv) > 1 else 'data'
+    train_file = get_latest_vintage(data_dir)
+    X, y, _, _, features = build_dataset(train_file, train_file)
     
     # Compare models
     results, predictions, X_test, y_test = compare_models(X, y)
