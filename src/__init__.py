@@ -9,7 +9,7 @@ from .data_loader import (
     load_fred_md_file, get_latest_vintage, build_dataset,
     fetch_fred_series, build_dataset_with_fred_target,
 )
-from .models import InflationForecaster, compare_models
+from .models import InflationForecaster
 
 __all__ = [
     'load_fred_md_file',
@@ -18,5 +18,4 @@ __all__ = [
     'fetch_fred_series',
     'build_dataset_with_fred_target',
     'InflationForecaster',
-    'compare_models',
 ]

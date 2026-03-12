@@ -11,7 +11,7 @@ import pandas as pd
 from pathlib import Path
 
 
-# FRED-MD transformation code definitions (McCracken & Ng)
+# FRED-MD transformation code definitions
 # 1: no transform, 2: 1st diff, 3: 2nd diff, 4: log,
 # 5: log 1st diff * 100, 6: log 2nd diff * 100, 7: delta(x/x_lag - 1)*100
 def _apply_tcode(series, code):
@@ -29,7 +29,7 @@ def _apply_tcode(series, code):
     elif code == 5:
         return np.log(s).diff() * 100
     elif code == 6:
-        return np.log(s).diff() * 100  # log first difference * 100
+        return np.log(s).diff().diff() * 100
     elif code == 7:
         pct = s / s.shift(1) - 1
         return pct.diff() * 100
