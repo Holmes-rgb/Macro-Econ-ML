@@ -42,7 +42,7 @@ pip install -r requirements.txt
 Open the notebook for the full interactive pipeline:
 
 ```bash
-jupyter notebook notebooks/inflation_forecasting.ipynb
+jupyter notebook notebooks/inflation_forecasting_elastinet.ipynb
 ```
 
 The notebook includes:
