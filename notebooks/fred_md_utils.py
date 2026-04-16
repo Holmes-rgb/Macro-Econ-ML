@@ -114,6 +114,31 @@ def load_fred_md_file(filepath):
     return df_transformed, tcodes
 
 
+def load_fred_md_raw(filepath):
+    """Load FRED-MD CSV as raw (untransformed) price levels plus tcode dict."""
+    filepath = str(filepath)
+    raw_all = pd.read_csv(filepath, header=None)
+    headers = raw_all.iloc[0].tolist()
+    tcode_row = raw_all.iloc[1].tolist()
+    tcodes = {}
+    for h, t in zip(headers[1:], tcode_row[1:]):
+        try:
+            tcodes[str(h)] = float(t)
+        except (ValueError, TypeError):
+            pass
+    df = raw_all.iloc[2:].copy()
+    df.columns = headers
+    df = df.reset_index(drop=True)
+    date_col = df.columns[0]
+    df[date_col] = pd.to_datetime(df[date_col])
+    df = df.set_index(date_col)
+    df.index.name = 'date'
+    df = df.dropna(how='all')
+    for col in df.columns:
+        df[col] = pd.to_numeric(df[col], errors='coerce')
+    return df, tcodes
+
+
 def get_latest_vintage(vintage_dir):
     """
     Find the most recent vintage CSV file in a directory.
