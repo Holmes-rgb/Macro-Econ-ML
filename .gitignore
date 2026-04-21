@@ -1,3 +1,4 @@
 notebooks/data
+notebooks/results
 *.pdf
 # The data is pulled in from the FRED hosted website, so we dont include it in the repo.
