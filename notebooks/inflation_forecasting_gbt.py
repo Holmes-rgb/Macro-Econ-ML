@@ -103,7 +103,7 @@ best_iters = min(iters_results, key=lambda x: x['val_rmse'])
 print(f"Best learning rate: {best_iters['max_iter']}  Val RMSE={best_iters['val_rmse']:.4f}")"""
 
 # Finding best learning rate 
-
+# Doesn't change per run but used to see which values are the best to use in the ensemble
 max_depth = [(i, d) for i, d in enumerate(range(3, 11))]
 md_results = []
 
