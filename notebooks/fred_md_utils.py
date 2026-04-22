@@ -345,3 +345,60 @@ def make_sequences(X, y, seq_len):
     X_seq = np.stack([X[i - seq_len + 1: i + 1] for i in range(seq_len - 1, n)])
     y_seq = y[seq_len - 1:]
     return X_seq, y_seq
+
+
+# ---------------------------------------------------------------------------
+# Notebook / script setup helpers
+# ---------------------------------------------------------------------------
+
+# Shared split dates — change here to propagate to every model
+TEST_START = '2025-06-01'
+VAL_START  = '2023-01-01'
+
+
+def default_paths(results_subdir='results'):
+    """Return (VINTAGE_DIR, RESULTS_DIR), resolving for both notebooks/ and repo root.
+
+    Creates RESULTS_DIR if missing.
+    """
+    import os
+    vintage_dir = '../data' if os.path.exists('../data') else 'data'
+    results_dir = results_subdir
+    os.makedirs(results_dir, exist_ok=True)
+    return vintage_dir, results_dir
+
+
+def configure_plots(figsize=(13, 5), title_size=13, label_size=11):
+    """Apply the shared matplotlib/seaborn style used across all notebooks."""
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    plt.style.use('default')
+    sns.set_style('whitegrid')
+    plt.rcParams['figure.figsize'] = figsize
+    plt.rcParams['axes.titlesize'] = title_size
+    plt.rcParams['axes.labelsize'] = label_size
+    plt.rcParams['figure.facecolor'] = 'white'
+    plt.rcParams['axes.facecolor'] = 'white'
+    plt.rcParams['savefig.facecolor'] = 'white'
+    plt.rcParams['axes.grid'] = True
+
+
+def get_splits(vintage_dir=None, horizon=1, n_lags=0,
+               test_start=None, val_start=None):
+    """Download/locate latest FRED-MD vintage and build train/val/test splits.
+
+    Returns:
+        (vintage_file, X_train, y_train, X_val, y_val, X_test, y_test, feature_names)
+    """
+    if vintage_dir is None:
+        vintage_dir, _ = default_paths()
+    if test_start is None:
+        test_start = TEST_START
+    if val_start is None:
+        val_start = VAL_START
+    vintage_file = download_latest_vintage(vintage_dir)
+    X_train, y_train, X_val, y_val, X_test, y_test, feature_names = build_dataset_from_csv(
+        filepath=vintage_file, horizon=horizon, n_lags=n_lags,
+        test_start=test_start, val_start=val_start,
+    )
+    return vintage_file, X_train, y_train, X_val, y_val, X_test, y_test, feature_names
