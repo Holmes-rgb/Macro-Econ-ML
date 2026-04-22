@@ -20,7 +20,12 @@ import numpy as np
 import pandas as pd
 import requests
 from dateutil.relativedelta import relativedelta
+# --------------------------------------------------------------------------
+# Constants for shared split dates — change here to propagate to every model
+# --------------------------------------------------------------------------
 
+TEST_START = '2024-01-01'
+VAL_START  = '2010-01-01'
 
 # ---------------------------------------------------------------------------
 # Transformation helpers
@@ -223,7 +228,7 @@ def download_latest_vintage(data_dir):
 
 
 def build_dataset_from_csv(filepath, horizon=1, n_lags=2,
-                            test_start='2025-06-01', val_start='2023-01-01'):
+                            test_start=TEST_START, val_start=VAL_START):
     """
     Build train/val/test datasets from a single FRED-MD vintage CSV.
 
@@ -348,13 +353,8 @@ def make_sequences(X, y, seq_len):
 
 
 # ---------------------------------------------------------------------------
-# Notebook / script setup helpers
+# Notebook setup helpers
 # ---------------------------------------------------------------------------
-
-# Shared split dates — change here to propagate to every model
-TEST_START = '2025-06-01'
-VAL_START  = '2023-01-01'
-
 
 def default_paths(results_subdir='results'):
     """Return (VINTAGE_DIR, RESULTS_DIR), resolving for both notebooks/ and repo root.
