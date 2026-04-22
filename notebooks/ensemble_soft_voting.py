@@ -1,40 +1,23 @@
-import sys
 import os
-
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-import seaborn as sns
 from itertools import product
 from sklearn.ensemble import (
     HistGradientBoostingClassifier,
     HistGradientBoostingRegressor,
-    GradientBoostingClassifier, 
-    GradientBoostingRegressor
+    GradientBoostingClassifier,
+    GradientBoostingRegressor,
 )
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
-from fred_md_utils import (
-    download_latest_vintage,
-    get_latest_vintage,
-    build_dataset_from_csv,
-    make_sequences,
-)
+from fred_md_utils import configure_plots, default_paths, get_splits, TEST_START, VAL_START
 
-TEST_START = '2025-06-01'
-VAL_START  = '2023-01-01'
+configure_plots()
+VINTAGE_DIR, RESULTS_DIR = default_paths()
 
-VINTAGE_DIR = '../data' if os.path.exists('../data') else 'data'
-
-vintage_file = download_latest_vintage(VINTAGE_DIR)
-
-
-X_train, y_train, X_val, y_val, X_test, y_test, feature_names = build_dataset_from_csv(
-    filepath=vintage_file,
-    horizon=1,
-    n_lags=0,
-    test_start=TEST_START,
-    val_start=VAL_START,
+vintage_file, X_train, y_train, X_val, y_val, X_test, y_test, feature_names = get_splits(
+    VINTAGE_DIR, horizon=1, n_lags=0,
 )
 
 max_iter = [100, 500, 1000, 2500]
