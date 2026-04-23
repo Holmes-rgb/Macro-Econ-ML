@@ -20,10 +20,11 @@ vintage_file, X_train, y_train, X_val, y_val, X_test, y_test, feature_names = ge
     VINTAGE_DIR, horizon=1, n_lags=0,
 )
 
-max_iter = [100, 500, 1000, 2500]
-learning_rate = [.01, .05, .1, .2]
-max_leaf_nodes = [10, 20, 30, 40, 50]
-min_samples_leaf = [10, 20, 50]
+max_iter = [100, 500, 1000]
+max_depth = [6, 7, 8, 9, 10]
+learning_rate = [.01, .03, .05, .07]
+max_leaf_nodes = [10, 20, 30]
+min_samples_leaf = [20, 35, 50]
 
 preds_sum = np.zeros(len(y_val))
 preds_sum_test = np.zeros(len(y_test))
