@@ -1,28 +1,15 @@
 # Macro-Econ-ML
 
-Machine learning models on macroeconomic data for inflation forecasting.
-
 ## Overview
 
-This project uses scikit-learn to evaluate various machine learning models for forecasting inflation in the US economy. The primary focus is on **ElasticNet regression**, with additional comparisons to Ridge, Lasso, Random Forest, and Gradient Boosting models.
+This project evaluates multiple machine learning models for forecasting US inflation using the FRED-MD dataset. Models include ElasticNet , AR-OLS, LSTM, and a soft-voting ensemble. A dedicated comparison notebook evaluates all models on an identical out-of-sample test split.
 
 ## Data Sources
 
-- **Training Data**: FRED-MD and FRED-QD databases from the Federal Reserve Bank of St. Louis
+- **FRED-MD** — Monthly macroeconomic database from the Federal Reserve Bank of St. Louis
   - URL: https://www.stlouisfed.org/research/economists/mccracken/fred-databases
-  - These datasets contain monthly and quarterly macroeconomic indicators
-
-- **Real-time Inflation Data**: Personal Consumption Expenditures (PCE) data
-  - URL: https://fred.stlouisfed.org/series/DPCCRV1Q225SBEA
-
-## Features
-
-- **Automated Data Download**: Fetches latest FRED economic data
-- **ElasticNet Model**: L1+L2 regularized regression optimized for macroeconomic forecasting
-- **Hyperparameter Tuning**: Grid search with time series cross-validation
-- **Comprehensive Evaluation**: RMSE, MAE, R², and MAPE metrics
-- **Visualizations**: Prediction plots, model comparisons, residual analysis, and feature importance
-- **Time Series Aware**: Uses appropriate train/test splits for temporal data
+  - Vintage CSVs are auto-fetched if the current month's file is missing from `notebooks/data/`
+- **Target series**: `PCEPI` (Personal Consumption Expenditures Price Index), transformed to monthly log-differences per FRED-MD tcode
 
 ## Installation
 
@@ -32,65 +19,66 @@ git clone https://github.com/Holmes-rgb/Macro-Econ-ML.git
 cd Macro-Econ-ML
 ```
 
-2. Install dependencies:
+2. Install dependencies (Python 3.14+ required):
+
+**Recommended — using `uv`: (if you haven't tried uv yet, I highly recommend)**
+
+```bash
+uv sync
+```
+
+**Alternative — using pip:**
+
 ```bash
 pip install -r requirements.txt
 ```
 
 ## Usage
 
-Open the notebook for the full interactive pipeline:
+Launch Jupyter and open any notebook:
 
 ```bash
-jupyter notebook notebooks/inflation_forecasting_elastinet.ipynb
-```
+# with uv
+uv run jupyter notebook
 
-The notebook includes:
-- Data loading and FRED-MD transformation helpers (self-contained, no external src/ module)
-- Exploratory data analysis with visualizations
-- ElasticNet model training with TimeSeriesSplit CV
-- Out-of-sample evaluation and feature importance analysis
+# or with pip
+jupyter notebook
+```
+Each notebook has a specific focus, and only runs one model. In order to run the model comparison notebook, you must first run all of the model notebooks. This can either be done manually, or by uncommenting and running the first cell in the `model_comparison.ipynb` notebook, which will automatically run all the other notebooks.
+
+| Notebook | Purpose |
+|---|---|
+| `inflation_forecasting_elastinet.ipynb` | ElasticNet model — primary pipeline with data loading, feature engineering, tuning, and evaluation |
+| `inflation_forecasting_ols.ipynb` | OLS baseline and random walk |
+| `inflation_forecasting_rnn.ipynb` | Recurrent neural network model (LSTM) |
+| `ensemble_soft_voting.ipynb` | Soft-voting ensemble of multiple models |
+| `model_comparison.ipynb` | evaluates all models on the same test split |
 
 ## Project Structure
 
 ```
 Macro-Econ-ML/
-├── data/                      # FRED-MD vintage CSV files
 ├── notebooks/
-│   └── inflation_forecasting.ipynb  # Full pipeline (self-contained)
-├── requirements.txt           # Python dependencies
-└── README.md                  # This file
+│   ├── data/                                    # FRED-MD vintage CSVs (auto-fetched)
+│   │   ├── 2026-01-MD.csv
+│   ├── results/                                 # Saved plots and comparison outputs
+│   ├── fred_md_utils.py                         # Shared data-loading and helpers
+│   ├── inflation_forecasting_elastinet.ipynb
+│   ├── inflation_forecasting_ols.ipynb
+│   ├── inflation_forecasting_rnn.ipynb
+│   ├── ensemble_soft_voting.ipynb
+│   └── model_comparison.ipynb
+├── requirements.txt
+└── README.md
 ```
-
-## Models
-
-### ElasticNet (Primary Model)
-- Combines L1 (Lasso) and L2 (Ridge) regularization
-- Hyperparameters: `alpha` (regularization strength), `l1_ratio` (balance between L1 and L2)
-- Good for high-dimensional data with correlated features
 
 ## Evaluation Metrics
 
-- **RMSE** (Root Mean Squared Error): Lower is better
-- **MAE** (Mean Absolute Error): Lower is better  
-- **R²** (R-squared): Higher is better (closer to 1)
-- **MAPE** (Mean Absolute Percentage Error): Lower is better
+All metrics are computed on the same held-out test split and reported on the percentage points of monthly PCE inflation. An RMSE of 0.10 means forecasts are off by 0.10 percentage points per month on average.
 
-## Results
-
-The results will be saved to the `results/` directory including:
-- Model comparison CSV file
-- Prediction plots
-- Model performance comparison charts
-- Residual analysis plots
-- Feature importance rankings
-
-## Requirements
-
-- Python 3.8+
-- scikit-learn >= 1.3.0
-- pandas >= 2.0.0
-- numpy >= 1.24.0
-- matplotlib >= 3.7.0
-- seaborn >= 0.12.0
-- requests >= 2.31.0
+| Metric | Better when |
+|---|---|
+| **RMSE** (Root Mean Squared Error) | Lower |
+| **MAE** (Mean Absolute Error) | Lower |
+| **R²** (R-squared) | Higher (max 1.0) |
+| **MAPE** (Mean Absolute Percentage Error) | Lower |
