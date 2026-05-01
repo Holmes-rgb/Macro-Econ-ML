@@ -1,0 +1,27 @@
+[project]
+name = "final-project"
+version = "0.1.0"
+requires-python = ">=3.14"
+description = "A machine learning aproach to nowcast inflation in the US"
+authors = [
+    { name = "Luke Holmes", email = "me@lukeholmes.dev" },
+    { name = "Charlie Nix", email = "" }]
+dependencies = [
+    "ipykernel>=7.2.0",
+    "jupyter>=1.0.0",
+    "matplotlib>=3.10.8",
+    "numpy>=2.4.2",
+    "openpyxl>=3.1.0",
+    "pandas>=3.0.1",
+    "requests>=2.32.5",
+    "scikit-learn>=1.8.0",
+    "scipy-stubs~=1.17.1",
+    "seaborn>=0.13.2",
+    "statsmodels>=0.14.0",
+    "tensorflow[and-cuda]>=2.21.0",
+]
+
+[dependency-groups]
+dev = [
+    "nbstripout>=0.9.1",
+]

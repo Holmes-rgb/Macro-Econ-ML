@@ -69,6 +69,8 @@ Macro-Econ-ML/
 │   ├── ensemble_soft_voting.ipynb
 │   └── model_comparison.ipynb
 ├── requirements.txt
+├── pyproject.toml
+├── uv.lock
 └── README.md
 ```
 
